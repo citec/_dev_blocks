@@ -48,6 +48,14 @@ class event_speaker(osv.osv):
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True),
         'image': fields.related('partner_id', 'image', type='binary', string='Picture'),
         # Functions
+        'move_lines':fields.function(_get_lines, type='many2many', relation='account.move.line', string='Entry Lines'),
+        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+            store={
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
+                'account.invoice.tax': (_get_invoice_tax, None, 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 20),
+            },
+            multi='all'),
         # Others
         'partner_id': fields.many2one('res.partner', 'Speaker', select=True, ondelete='cascade'),
         'date_start': fields.datetime('Start Date/Time', ),
@@ -99,6 +107,27 @@ class event_speaker(osv.osv):
 #############################################################
 # function fields functions
 #############################################################
+    # without multi
+    def _get_lines(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for invoice in self.browse(cr, uid, ids, context=context):
+            id = invoice.id
+            res[id] = []
+            if not invoice.move_id:
+                continue
+            data_lines = [x for x in invoice.move_id.line_id if x.account_id.id == invoice.account_id.id]
+            partial_ids = []
+            for line in data_lines:
+                ids_line = []
+                if line.reconcile_id:
+                    ids_line = line.reconcile_id.line_id
+                elif line.reconcile_partial_id:
+                    ids_line = line.reconcile_partial_id.line_partial_ids
+                l = map(lambda x: x.id, ids_line)
+                partial_ids.append(line.id)
+                res[id] =[x for x in l if x <> line.id and x not in partial_ids]
+        return res
+
     # with multi
     def _occupancy(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -111,6 +140,22 @@ class event_speaker(osv.osv):
                                 'occupancy_rate': rate,
                                 }
         return result
+
+    # with multi
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for invoice in self.browse(cr, uid, ids, context=context):
+            res[invoice.id] = {
+                'amount_untaxed': 0.0,
+                'amount_tax': 0.0,
+                'amount_total': 0.0
+            }
+            for line in invoice.invoice_line:
+                res[invoice.id]['amount_untaxed'] += line.price_subtotal
+            for line in invoice.tax_line:
+                res[invoice.id]['amount_tax'] += line.amount
+            res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
+        return res
 
 #############################################################
 # workflow functions
