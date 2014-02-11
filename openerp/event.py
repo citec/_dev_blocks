@@ -1124,6 +1124,40 @@ class event_registration_line(osv.osv):
             res.append((r.id, name))
         return res
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        if context is None:
+            context = {}
+        pos = 0
+
+        while pos < len(args):
+
+            if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
+                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
+            if args[pos][0] == 'journal_id':
+                if not args[pos][2]:
+                    del args[pos]
+                    continue
+                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
+                if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
+                    args[pos] = ('type','not in',('consolidation','view'))
+                    continue
+                ids3 = map(lambda x: x.id, jour.type_control_ids)
+                ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
+                ids1 += map(lambda x: x.id, jour.account_control_ids)
+                args[pos] = ('id', 'in', ids1)
+            pos += 1
+
+        if context and context.has_key('consolidate_children'): #add consolidated children of accounts
+            ids = super(account_account, self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+            for consolidate_child in self.browse(cr, uid, context['account_id'], context=context).child_consol_ids:
+                ids.append(consolidate_child.id)
+            return ids
+
+        return super(account_account, self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'room_id' in vals:
             vals.update({'room_last_time': fields.datetime.now()})
