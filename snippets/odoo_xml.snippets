@@ -1,0 +1,86 @@
+snippet xml
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="${1:0}">
+		
+		record$0
+	</data>
+</openerp>
+endsnippet
+
+snippet record
+<record id="${1:xmlid_with_underscores}" model="${2:model.with.points}">
+	field$0
+</record>
+endsnippet
+
+snippet field
+<field name="$1">$2</field>
+field$0
+endsnippet
+
+snippet fieldref
+<field name="$1" ref="$2" />
+field$0
+endsnippet
+
+snippet fieldval
+<field name="$1" val="$2" />
+field$0
+endsnippet
+
+snippet inherit
+<field name="inherit_id" ref="${1:module_name.}${2:view_xml_id}" />
+field$0
+endsnippet
+
+snippet bcscenario
+<record id="scenario_$1" model="scanner.scennario">
+	<field name="name">${2:Name HERE}</field>
+	<field name="active" eval="1" />
+	<field name="sequence" eval="400" />
+	<field name="model_id" ref="${3:module_name.}${4:model_name}" />
+	<field name="type">scenario</field>
+	<field name="shared_custom" eval="0" />
+</record>
+
+$0
+endsnippet
+
+snippet bcstep
+<record id="scenario_$1" model="scanner.scenario.step">
+	<field name="name">${2:Name HERE}</field>
+	<field name="scenario_id" ref="scenario_$3" />
+	<field name="step_start" eval="${4:0}" />
+	<field name="step_stop" eval="${5:0}" />
+	<field name="step_back" eval="${6:0}" />
+	<field name="python_code">act = '${7:M}'
+res = [
+	${8:('|', name), 
+    ('start', startresumename), 
+    ('review', 'Review'), 
+    ('open', 'Open'), 
+    ('save', 'Save'), 
+    ('exit', 'Cancel'),}
+]
+val = '${9:soma_return_val_here}'
+	</field>
+</record>
+
+$0
+endsnippet
+
+snippet bctrans
+<record id="scenario_$1_$2" model="scanner.scenario.transition">
+	<field name="name">${3:Name here}</field>
+	<field name="from_id" ref="scenario_$1" />
+	<field name="to_id" ref="scenario_$2" />
+	<field name="condition">True</field>
+	<field name="transition_type">${4:keyboard}</field>
+	<field name="tracer">${5:$1}</field>
+	<field name="scenario_id" ref="scenario_$6" />
+	<field name="sequence" eval="${7:10}" />
+</record>
+
+$0
+endsnippet
