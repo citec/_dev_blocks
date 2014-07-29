@@ -35,7 +35,7 @@ field$0
 endsnippet
 
 snippet bcscenario
-<record id="scenario_$1" model="scanner.scennario">
+<record id="scenario_inventory_$1" model="scanner.scennario">
 	<field name="name">${2:Name HERE}</field>
 	<field name="active" eval="1" />
 	<field name="sequence" eval="400" />
@@ -48,9 +48,9 @@ $0
 endsnippet
 
 snippet bcstep
-<record id="scenario_$1" model="scanner.scenario.step">
+<record id="scenario_inventory_$1" model="scanner.scenario.step">
 	<field name="name">${2:Name HERE}</field>
-	<field name="scenario_id" ref="scenario_$3" />
+	<field name="scenario_id" ref="scenario_inventory$3" />
 	<field name="step_start" eval="${4:0}" />
 	<field name="step_stop" eval="${5:0}" />
 	<field name="step_back" eval="${6:0}" />
@@ -71,14 +71,14 @@ $0
 endsnippet
 
 snippet bctrans
-<record id="scenario_$1_$2" model="scanner.scenario.transition">
+<record id="scenario_inventory_$1_$2" model="scanner.scenario.transition">
 	<field name="name">${3:Name here}</field>
-	<field name="from_id" ref="scenario_$1" />
-	<field name="to_id" ref="scenario_$2" />
+	<field name="from_id" ref="scenario_inventory_$1" />
+	<field name="to_id" ref="scenario_inventory_$2" />
 	<field name="condition">True</field>
 	<field name="transition_type">${4:keyboard}</field>
 	<field name="tracer">${5:$1}</field>
-	<field name="scenario_id" ref="scenario_$6" />
+	<field name="scenario_id" ref="scenario_inventory$6" />
 	<field name="sequence" eval="${7:10}" />
 </record>
 
