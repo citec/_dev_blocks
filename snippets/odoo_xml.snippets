@@ -1,37 +1,111 @@
+global !p
+def points2underscores(txt):
+	return txt.replace('.', '_')
+
+def underscores2points(txt):
+	return txt.replace('_', '.')
+endglobal
+
 snippet xml
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data noupdate="${1:0}">
 		
-		record$0
+		$0
 	</data>
 </openerp>
 endsnippet
 
 snippet record
 <record id="${1:xmlid_with_underscores}" model="${2:model.with.points}">
-	field$0
+	$0
 </record>
 endsnippet
 
 snippet field
 <field name="$1">$2</field>
-field$0
+$0
+endsnippet
+
+snippet fv
+<field name="$1" $0/>
+endsnippet
+
+snippet string
+string="${1:Field Name}" $0
+endsnippet
+
+snippet readonly
+readonly="${1:1}" $0
+endsnippet
+
+snippet invisible
+invisible="${1:1}" $0
+endsnippet
+
+snippet widget
+widget="${1:char|id|email|url|text|html|date|datetime|selection|many2one|many2onebutton|many2many|many2many_tags|many2many_kanban|one2many|one2many_list|reference|boolean|float|integer|float_time|progressbar|image|binary|many2many_binary|statusbar|monetary}"${2: options="{${3:'field1': 'value1'}}"} $0
+endsnippet
+
+snippet attrs
+attrs="{'${1:readonly|invisible}': ${2:[('some', '=', 'domain')]}}" $0
 endsnippet
 
 snippet fieldref
 <field name="$1" ref="$2" />
-field$0
+$0
 endsnippet
 
 snippet fieldval
 <field name="$1" val="$2" />
-field$0
+$0
 endsnippet
 
 snippet inherit
 <field name="inherit_id" ref="${1:module_name.}${2:view_xml_id}" />
-field$0
+$0
+endsnippet
+
+snippet view
+<record id="view_`!p snip.rv = points2underscores(t[1])`_${2:form|tree|search|calendar|graph}" model="ir.ui.view">
+	<field name="name">${3:$1.$2}</field>
+	<field name="model">${1:model.with.points.here}</field>
+	<field name="arch" type="xml">
+		<$2 string="${4:Title here}" version="${5:8.0}">
+			$0
+		</$2>
+	</field>
+</record>
+endsnippet
+
+snippet kv
+'${1:key}': ${2:'value'}, $0
+endsnippet
+
+snippet dict
+{'${1:field}': ${2:'value'}, $0}
+endsnippet
+
+snippet dom
+[('${1:field}', '${2:=}', ${3:'value'})]
+endsnippet
+
+snippet groups
+groups="${1:module_name.}${2:group_xml_id}" 
+endsnippet
+
+snippet actwindow
+<record id="action_`!p snip.rv = points2underscores(t[1])`" model="ir.actions.act_window">
+	<field name="name">${2:Name of action and menu}</field>
+	<field name="type">ir.actions.act_window</field>
+	<field name="res_model">${1:model.with.points}</field>
+	<field name="view_type">${3:form}</field>
+	<field name="view_mode">${4:tree,form,calendar,graph}</field>
+	<field name="context">{}</field>
+	<field name="domain">[]</field>
+</record>
+<menuitem action="action_`!p snip.rv = points2underscores(t[1])`" id="menu_`!p snip.rv = points2underscores(t[1])`" parent="${5:parent_xmlid}" sequence="${6:10}" />
+$0
 endsnippet
 
 snippet bcscenario

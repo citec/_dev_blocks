@@ -6,6 +6,19 @@ def underscores2points(txt):
 	return txt.replace('_', '.')
 endglobal
 
+snippet start
+# -*- coding: utf-8 -*-
+$0
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+endsnippet
+
+snippet importopenerp
+from openerp.osv import osv, fields, orm
+from openerp.tools.translate import _
+$0
+endsnippet
+
 snippet class
 class ${1:modulenale_modelname}(osv.osv):
     _name = '`!p snip.rv = underscores2points(t[1])`'
@@ -13,6 +26,23 @@ class ${1:modulenale_modelname}(osv.osv):
     _description = u'${2:put some model description here}'
 
 	$0
+endsnippet
+
+# Field types
+
+snippet fchar
+'${1:fieldname}': fields.char(u'${2:Field Name}', size=${3:64}, required=${4:False}, ${5:translate=True, }${6:track_visibility='${7:onchange}', }${8:help=u'${9:Some help here}', }),
+$0
+endsnippet
+
+snippet fm2o
+'${1:fieldname}': fields.many2one('${2:reference.model}', u'${3:Field Name}', required=${4:False}, ${5:domain=[('parent_id', '=', False)], }${6:track_visibility='${7:onchange}', }${8:help=u'${9:Some help here}', }),
+$0
+endsnippet
+
+snippet fm2m
+'${1:fieldname}': fields.many2many('${2:reference.model}', '${3:this_model}_`!p snip.rv = points2underscores(t[2])`_rel', '${4:remote_model_field}_id', '${5:`!p snip.rv = t[1][:-1]`}', u'${6:Field Name}', required=${8:False}, ${9:domain=[('parent_id', '=', False)], }${10:track_visibility='${11:onchange}', }${12:help=u'${13:Some help here}', }),
+$0
 endsnippet
 
 snippet columns

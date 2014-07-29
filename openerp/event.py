@@ -300,7 +300,7 @@ class event_event(osv.osv):
                     self.pool.get("res.partner").write(cr, uid, rg_partner_id, vals, context)
 
                 # Create the inscription
-                event_id = context.get('event_id', False) or dbsource_brw.event_id and dbsource_brw.event_id.id or self.pool.get("event.event").search(cr, uid, [('name', 'ilike', 'SmartCity Business')]) 
+                event_id = context.get('event_id', False) or dbsource_brw.event_id and dbsource_brw.event_id.id or self.pool.get("event.event").search(cr, uid, [('name', 'ilike', 'SmartCity Business')])
                 if event_id:
                     if not isinstance(event_id, (int, long)):
                         event_id = event_id[0]
@@ -533,7 +533,7 @@ class event_event(osv.osv):
         'child_ids': fields.one2many('event.event', 'parent_id', 'Subevents', ),
         'speaker_ids': fields.many2many('event.speaker', 'event_event_event_speaker_rel', 'event_id', 'speaker_id', 'Other Speakers', ),
         'room_id': fields.many2one('event.room', 'Room'),
-        'product_ids': fields.many2many('product.product', 'event_registration_product_product_rel', 'registration_id', 'product_id', 'Products', 
+        'product_ids': fields.many2many('product.product', 'event_registration_product_product_rel', 'registration_id', 'product_id', 'Products',
             domain=['&', ('sale_ok', '=', True), ('type', '=', 'service')],
             context={'default_sale_ok': 1, 'default_type': 'service'},
             ),
@@ -926,7 +926,7 @@ class event_registration(osv.osv):
                                     track_visibility='onchange',
                                     size=16, readonly=True),
         'import_raw_data': fields.text("Dados originais da inscrição"),
-        'pagseguro': fields.function(_url_pagseguro, type="char", size=256, string="PagSeguro", 
+        'pagseguro': fields.function(_url_pagseguro, type="char", size=256, string="PagSeguro",
             store=False),
             #store={
             #    'event.registration': (lambda self, cr, uid, ids, c={}: ids, ['invoice_partner_id', 'total_price', 'registration_line_ids', 'state'], 10),
@@ -1198,7 +1198,7 @@ class event_registration_line(osv.osv):
         else:
             ean = (len(ean[0:6]) == 6 and ean[0:6] or ean[0:6].ljust(6,'0')) + ean[6:].rjust(6,'0')
         return ean
-    
+
     def _get_ean_key(self, code):
         sum = 0
         for i in range(12):
@@ -1208,7 +1208,7 @@ class event_registration_line(osv.osv):
                 sum += int(code[i])
         key = (10 - sum % 10) % 10
         return str(key)
-    
+
     def _generate_ean13_value(self, cr, uid, line, context=None):
         ean13 = False
         if context is None: context = {}
@@ -1232,14 +1232,14 @@ class event_registration_line(osv.osv):
                         'ean13': ean13
                     }, context=context)
         return True
-   
+
     def create(self, cr, uid, vals, context=None):
         if context is None: context = {}
         id = super(event_registration_line, self).create(cr, uid, vals, context=context)
         if not vals.get('ean13'):
             ean13 = self.generate_ean13(cr, uid, [id], context=context)
         return id
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None: default = {}
         if context is None: context = {}
@@ -1542,15 +1542,15 @@ class event_registration_type(osv.osv):
 
 class ir_sequence(orm.Model):
     _inherit = 'ir.sequence'
-    
+
     _columns = {
         'barcode_sequence': fields.boolean('Barcode Sequence'),
     }
-    
+
     _defaults = {
         'barcode_sequence': False,
     }
-    
+
 class event_attendance(osv.osv):
     _name= 'event.attendance'
 
@@ -1569,10 +1569,10 @@ class event_attendance(osv.osv):
         'badge_name': fields.related('registration_line_id', 'badge_name', type='char', string='Badge Name'),
         'badge_company_name': fields.related('registration_line_id', 'badge_company_name', type='char', string='Badge Company Name'),
         'function': fields.char('Function', size=128),
-        'action': fields.selection([    ('check_in', 'Check In'), 
-                                        ('check_out', 'Check Out'), 
-                                        ('forbidden', 'Forbidden'), 
-                                        ('forced_check_in', 'Force Check In'), 
+        'action': fields.selection([    ('check_in', 'Check In'),
+                                        ('check_out', 'Check Out'),
+                                        ('forbidden', 'Forbidden'),
+                                        ('forced_check_in', 'Force Check In'),
                                         ], 'Action', required=True),
         # Fields only for usability pourpose
         'partner_id': fields.related('registration_line_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', store=True),
