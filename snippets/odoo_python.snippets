@@ -35,6 +35,11 @@ snippet fchar
 $0
 endsnippet
 
+snippet fo2m
+'${1:fieldname}': fields.one2many('${2:reference.model}', '${3:reference_field}_id', u'${4:Field Name}', required=${5:False}, ${6:domain=[('parent_id', '=', False)], }${7:track_visibility='${8:onchange}', }${9:help=u'${10:Some help here}', }),
+$0
+endsnippet
+
 snippet fm2o
 '${1:fieldname}': fields.many2one('${2:reference.model}', u'${3:Field Name}', required=${4:False}, ${5:domain=[('parent_id', '=', False)], }${6:track_visibility='${7:onchange}', }${8:help=u'${9:Some help here}', }),
 $0

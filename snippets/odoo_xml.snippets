@@ -16,6 +16,12 @@ snippet xml
 </openerp>
 endsnippet
 
+snippet <!--
+<!--
+${1:${VISUAL:put something here}}
+-->
+endsnippet
+
 snippet record
 <record id="${1:xmlid_with_underscores}" model="${2:model.with.points}">
 	$0
@@ -41,6 +47,14 @@ endsnippet
 
 snippet invisible
 invisible="${1:1}" $0
+endsnippet
+
+snippet nolabel
+nolabel="${1:1}" $0
+endsnippet
+
+snippet context
+context="{'${1:field}': ${2:'value'}, $3}" $0
 endsnippet
 
 snippet widget
@@ -90,8 +104,20 @@ snippet dom
 [('${1:field}', '${2:=}', ${3:'value'})]
 endsnippet
 
+snippet group
+<group${1: string="${3:Some title here, optional}"}>
+	$0
+</group>
+endsnippet
+
 snippet groups
 groups="${1:module_name.}${2:group_xml_id}" 
+endsnippet
+
+snippet tree
+<tree string="${1:Title of view}" version="${2:8.0}">
+	$0
+</tree>
 endsnippet
 
 snippet actwindow
