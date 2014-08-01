@@ -1,25 +1,89 @@
+####################################################################################################
+# Helpers
+####################################################################################################
 global !p
 def points2underscores(txt):
 	return txt.replace('.', '_')
 
 def underscores2points(txt):
 	return txt.replace('_', '.')
+
+def ffunction_field_type(type):
+	options = {
+		'many2many': "relation='model.with.points', ",
+		'one2many': "relation='model.with.points', ",
+		'many2one': "relation='model.with.points', ",
+		'float': "digits_compute=dp.get_precision('Account'),  # Remember to import dp",
+		'char': "size=64, ",
+	}
+	return type in options and options[type] or ''
+
+def complete(t, opts):
+	options = {
+		'fieldtypes': ['integer', 'boolean', 'float', 'char', 'text', 'date', 'datetime', 'one2many', 'many2many', 'many2one', 'binary', 'selection', 'related'],
+		'weekdays': ['monday', 'tuesday'],
+		'operators': ['=', 'like', 'ilike', '<', '>', '<=', '>=', 'in', 'not in'],
+		'viewtypes': ['tree', 'form', 'search', 'calendar', 'graph'],
+		'track_visibility': ['onchange', 'always'],
+		'ondelete': ['cascade', 'restrict', 'set null'],
+		'widgets': ['char', 'id', 'email', 'url', 'text', 'html', 'date', 'datetime', 'selection', 'many2one', 'many2onebutton', 'many2many', 'many2many_tags', 'many2many_kanban', 'one2many', 'one2many_list', 'reference', 'boolean', 'float', 'integer', 'float_time', 'progressbar', 'image', 'binary', 'many2many_binary', 'statusbar', 'monetary'],
+		'colors': ['todo', 'todo'],  # TODO
+		'fonts': ['todo', 'todo'],  # TODO
+	}
+	if isinstance(opts, str) and opts in options:
+		opts = options[opts]
+	if t:
+		opts = [ m[len(t):] for m in opts if m.startswith(t) ]
+	if len(opts) == 1:
+		return opts[0]
+	return '(' + '|'.join(opts) + ')'
 endglobal
 
-snippet start
+snippet start "" b
 # -*- coding: utf-8 -*-
 $0
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 endsnippet
 
-snippet importopenerp
+####################################################################################################
+# Imports
+####################################################################################################
+
+snippet importopenerp "" b
 from openerp.osv import osv, fields, orm
 from openerp.tools.translate import _
 $0
 endsnippet
 
-snippet class
+snippet import_ "" b
+from openerp.tools.translate import _
+endsnippet
+
+snippet importdatetime "" b
+from datetime import datetime, timedelta
+from dateutil import relativedelta
+from dateutil.parser import parse
+$0
+endsnippet
+
+snippet importdp "" b
+from openerp.addons.decimal_precision import decimal_precision as dp
+$0
+endsnippet
+
+snippet importlog "" b
+import logging
+
+_logger = logging.getLogger(__name__)
+$0
+endsnippet 
+
+####################################################################################################
+# Class
+####################################################################################################
+
+snippet class "" b
 class ${1:modulenale_modelname}(osv.osv):
     _name = '`!p snip.rv = underscores2points(t[1])`'
     _inherit = '`!p snip.rv = underscores2points(t[1])`'
@@ -28,35 +92,104 @@ class ${1:modulenale_modelname}(osv.osv):
 	$0
 endsnippet
 
+####################################################################################################
 # Field types
+####################################################################################################
 
-snippet fchar
-'${1:fieldname}': fields.char(u'${2:Field Name}', size=${3:64}, required=${4:False}, ${5:translate=True, }${6:track_visibility='${7:onchange}', }${8:help=u'${9:Some help here}', }),
+snippet fchar "fields.char" b
+'${1:fieldname}': fields.char(u'${2:Field Name}', size=${3:64}, ${4:translate=True, }$5),
 $0
 endsnippet
 
-snippet fo2m
-'${1:fieldname}': fields.one2many('${2:reference.model}', '${3:reference_field}_id', u'${4:Field Name}', required=${5:False}, ${6:domain=[('parent_id', '=', False)], }${7:track_visibility='${8:onchange}', }${9:help=u'${10:Some help here}', }),
+snippet fdate "fields.date" b
+'${1:fieldname}': fields.date(u'${2:Field Name}', $3),
 $0
 endsnippet
 
-snippet fm2o
-'${1:fieldname}': fields.many2one('${2:reference.model}', u'${3:Field Name}', required=${4:False}, ${5:domain=[('parent_id', '=', False)], }${6:track_visibility='${7:onchange}', }${8:help=u'${9:Some help here}', }),
+snippet fdatetime "fields.datetime" b
+'${1:fieldname}': fields.datetime(u'${2:Field Name}', $3),
 $0
 endsnippet
 
-snippet fm2m
-'${1:fieldname}': fields.many2many('${2:reference.model}', '${3:this_model}_`!p snip.rv = points2underscores(t[2])`_rel', '${4:remote_model_field}_id', '${5:`!p snip.rv = t[1][:-1]`}', u'${6:Field Name}', required=${8:False}, ${9:domain=[('parent_id', '=', False)], }${10:track_visibility='${11:onchange}', }${12:help=u'${13:Some help here}', }),
+snippet ffloat "fields.float" b
+'${1:fieldname}': fields.float(u'${2:Field Name}', ${3:digits_compute=dp.get_precision('Account'), }$4)  # Remember to import dp
 $0
 endsnippet
 
-snippet columns
+snippet finteger "fields.integer" b
+'${1:fieldname}': fields.integer(u'${2:Field Name}', $3),
+$0
+endsnippet
+
+snippet fo2m "fields.one2many" b
+'${1:fieldname}': fields.one2many('${2:reference.model}', '${3:reference_field}_id', u'${4:Field Name}', $5),
+$0
+endsnippet
+
+snippet fm2o "fields.many2one" b
+'${1:fieldname}': fields.many2one('${2:reference.model}', u'${3:Field Name}', $6),
+$0
+endsnippet
+
+snippet fm2m "fields.many2many" b
+'${1:fieldname}': fields.many2many('${2:reference.model}', '${3:this_model}_`!p snip.rv = points2underscores(t[2])`_rel', '${4:remote_model_field}_id', '${5:`!p snip.rv = t[1][:-1]`}', string=u'${6:Field Name}', $7),
+$0
+endsnippet
+
+snippet ffunction "fields.function" b
+'${1:fieldname}': fields.function(_$1, string=u'${2:Pretty name of your field}', type="$3`!p snip.rv = complete(t[3], 'fieldtypes')`", ${4:`!p snip.rv = ffunction_field_type(t[3]) `}
+	${5:store={
+		'${6:current_model_with_underscores}': (lambda self, cr, uid, ids, c={}: ids, [${7:'field1', 'field2'}], 20),
+		'${8:different_model_with_underscores}': (_get_$6_from_$7, [${9:'field1', 'field2'}], 20),
+	},}
+	${10:multi='${11:arbitrary_name}'}, $12),
+$0
+endsnippet
+
+snippet frelated "fields.related" b
+'${1:fieldname}': fields.related('${2:another_relation_field_in_this_model}', '${3:field_in_remote_model}', string=u'${4:Pretty name of your field}', type="$5`!p snip.rv = complete(t[5], 'fieldtypes')`", ${6:`!p snip.rv = ffunction_field_type(t[5]) `}
+	${7:store={
+		'${8:current_model_with_underscores}': (lambda self, cr, uid, ids, c={}: ids, [${9:'$2'}], 20),
+		'${10:model_of_the_relation_field_with_underscores}': (_get_$8_from_$10, [${11:'$3'}], 20),
+	},} $13),
+$0
+endsnippet
+
+####################################################################################################
+# Fields types' attributes
+####################################################################################################
+
+snippet required "" !b
+required=${1:True}, $0
+endsnippet
+
+snippet track_visibility "" !b
+track_visibility='$1`!p snip.rv = complete(t[1], 'track_visibility')`', $0
+endsnippet
+
+snippet columns "" !b
 _columns = {
 	$0
 }
 endsnippet 
 
-snippet groupby
+snippet help "" !b
+help=u'${1:Some help here}', $0
+endsnippet
+
+snippet dom "" !b
+('${1:field}', '$2`!p snip.rv = complete('operators')`', ${3:value})
+endsnippet
+
+snippet domain "" !b
+('${1:field}', '$2`!p snip.rv = complete('operators')`', ${3:value})
+endsnippet
+
+####################################################################################################
+# Class attributes
+####################################################################################################
+
+snippet groupby "" b
 def $2(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
 	access_rights_uid = access_rights_uid or uid
 	model = self.pool['${3:model.with.points}']
@@ -73,18 +206,31 @@ _group_by_full = {
 $0
 endsnippet
 
-snippet logimport
-import logging
+snippet order "" b
+_order = '${1:some_field} ${2:ASC}'
+endsnippet
 
-_logger = logging.getLogger(__name__)
-$0
-endsnippet 
+####################################################################################################
+# ORM calls
+####################################################################################################
 
-snippet logger
-_logger.error("$1 = %s" % ($1, ))
-endsnippet 
+snippet create "" !b
+$2create(cr, uid, ${1:vals}, context)$0
+endsnippet
 
-snippet defcreate
+snippet browse "" !b
+$2browse(cr, uid, ${1:ids}, context)$0
+endsnippet
+
+snippet search "" !b
+$10search(cr, uid, ${1:domain},${2: offset=${3:0},}${4: limit=${5:50},}${6: order='${7:field ASC}',}${8: count=${9:True},} context=None, )$0
+endsnippet
+
+####################################################################################################
+# ORM functions
+####################################################################################################
+
+snippet defcreate "def create" b
 def create(self, cr, uid, vals, context=None):
 	if context is None:
 		context = {}
@@ -94,7 +240,7 @@ def create(self, cr, uid, vals, context=None):
 
 endsnippet
 
-snippet defcopy
+snippet defcopy "def copy" b
 def copy(self, cr, uid, id, default=None, context=None):
 	if default is None:
 		default = {}
@@ -105,20 +251,20 @@ def copy(self, cr, uid, id, default=None, context=None):
 
 endsnippet
 
-snippet deffields_view_get
+snippet deffields_view_get "def fields_view_get" b
 def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
 	if context is None:
 		context = {}
 	ctx = context.copy()
 	res = super(${1:model_with_underscores}, self).fields_view_get(cr, uid, view_id, view_type, context=ctx, toolbar=toolbar)
-	if view_type == '${2:tree|form|search|calendar|graph}':
+	if view_type == '$2`!p snip.rv = complete(t[2], 'viewtypes')`':
 		# use res['arch'} to modify your view, it is a string, so just use replace
 		${0:pass}
 	return res
 
 endsnippet
 
-snippet defname_search
+snippet defname_search "def name_search" b
 def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
 	if not args:
 		args = []
@@ -139,7 +285,7 @@ def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, 
 
 endsnippet
 
-snippet defonchange
+snippet defonchange "def onchange" b
 def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, additionalField2, }context=None):
 	if not $1:
 		return {}
@@ -159,7 +305,7 @@ def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, addi
 $0
 endsnippet
 
-snippet defwrite
+snippet defwrite "def write" b
 def write(self, cr, uid, ids, vals, context=None):
 	if context is None:
 		context = {}
@@ -168,7 +314,7 @@ def write(self, cr, uid, ids, vals, context=None):
 
 endsnippet
 
-snippet defname_get
+snippet defname_get "def name_get" b
 def name_get(self, cr, uid, ids, context=None):
 	if not len(ids):
 		return []
@@ -179,4 +325,55 @@ def name_get(self, cr, uid, ids, context=None):
 		${0:res.append((o.id, "[%s] %s" % (o.field1, field2)))}
 	return res  # It must return a list of tuples [(id1, name1), (id2, name2)]
 
+endsnippet
+
+####################################################################################################
+# Function, Store and Related fields helper functions
+####################################################################################################
+snippet defstore "def store_function_get_model1_from_model2" b
+def _get_${1:destination_model}_from_${2:origin_model}(self, cr, uid, ids, context=None):
+	res = {}
+	for o in self.pool['`!p snip.rv = underscores2points(t[2])`'].browse(cr, uid, ids, context=context):
+		${4:# Add some logic here}
+		res[o.${3:parent_id.id}] = True
+	return res.keys()
+
+$0
+endsnippet
+
+####################################################################################################
+# Miscelaneous
+####################################################################################################
+
+snippet logger "" b
+_logger.error("$1 = %s" % ($1, ))
+$0
+endsnippet 
+
+snippet logerror "" b
+_logger.error("$1 = %s" % ($1, ))
+$0
+endsnippet 
+
+snippet logwarning "" b
+_logger.warning("$1 = %s" % ($1, ))
+$0
+endsnippet 
+
+snippet loginfo "" b
+_logger.info("$1 = %s" % ($1, ))
+$0
+endsnippet 
+
+snippet strftime "" !b
+strftime('${2:'%Y-%m-%d %H:%M:%S'}')
+endsnippet
+
+snippet strptime "" !b
+strptime(${1:some_date_field}, '${2:'%Y-%m-%d %H:%M:%S'}')
+endsnippet
+
+snippet todo "TODO comment" b
+# TODO ${1: 1-5 priority (the lower the more prioritary)}: ${2:Write something that need to me done here} (`date +%d`/`date +%m`/`date +%Y` by: `getent passwd "jash" | cut -d ':' -f 5`)
+$0
 endsnippet
