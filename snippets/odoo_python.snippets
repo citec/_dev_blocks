@@ -56,6 +56,23 @@ _columns = {
 }
 endsnippet 
 
+snippet groupby
+def $2(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+	access_rights_uid = access_rights_uid or uid
+	model = self.pool['${3:model.with.points}']
+	order = '${4:field ASC}'
+	domain = [$5]
+	ids = model.search(cr, uid, domain, order=order, access_rights_uid=access_rights_uid, context=context)
+	result = model.name_get(cr, access_rights_uid, ids, context=context)
+	return result
+
+_group_by_full = {
+	'${1:some_field_name}': _${2:_read_group_$1},
+}
+
+$0
+endsnippet
+
 snippet logimport
 import logging
 
@@ -67,3 +84,99 @@ snippet logger
 _logger.error("$1 = %s" % ($1, ))
 endsnippet 
 
+snippet defcreate
+def create(self, cr, uid, vals, context=None):
+	if context is None:
+		context = {}
+	${0:# you can modify vals before creating the object with vals.update({'some_field': new_value})}
+	id = super(${1:model_with_underscores}, self).create(cr, uid, vals, context=context)
+	return id
+
+endsnippet
+
+snippet defcopy
+def copy(self, cr, uid, id, default=None, context=None):
+	if default is None:
+		default = {}
+	if context is None:
+		context = {}
+	${0:# you can modify values (default) before writing the object with default({'some_field': new_value})}
+	return super(${1:model_with_underscores}, self).copy(cr, uid, id, default=default, context=context)
+
+endsnippet
+
+snippet deffields_view_get
+def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
+	if context is None:
+		context = {}
+	ctx = context.copy()
+	res = super(${1:model_with_underscores}, self).fields_view_get(cr, uid, view_id, view_type, context=ctx, toolbar=toolbar)
+	if view_type == '${2:tree|form|search|calendar|graph}':
+		# use res['arch'} to modify your view, it is a string, so just use replace
+		${0:pass}
+	return res
+
+endsnippet
+
+snippet defname_search
+def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+	if not args:
+		args = []
+	ids = []
+	${0:# You need to search for ids matching some criteria
+	#
+	# Example with self.search
+	#
+	#		ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
+	#
+	# Example with sql query:
+	#
+	#		query = "select id from event_registration_line where regexp_replace(cnpj_cpf, '[^0-9]', '', 'g') ilike concat('%%', regexp_replace('%s', '[^0-9]', '', 'g'), '%%') and state in ('draft', 'verified', 'open', 'absent', 'present')" % name
+	# 		cr.execute(query)
+	# 		ids += filter(None, map(lambda x:x[0], cr.fetchall()))}
+	ids = list(set(ids))
+	return self.name_get(cr, uid, ids, context)
+
+endsnippet
+
+snippet defonchange
+def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, additionalField2, }context=None):
+	if not $1:
+		return {}
+	if context is None:
+		context = {}
+	${3:# Do something here}
+	return {
+		'value': {
+			'${4:modified_field}': ${5:new_value},
+		},
+		${6:'warning': {
+			'title': _('${7:Some Title Here}'),
+			'message' : _('${8:Some Warning message}')
+		}}
+	}
+
+$0
+endsnippet
+
+snippet defwrite
+def write(self, cr, uid, ids, vals, context=None):
+	if context is None:
+		context = {}
+	${0:# you can modify vals before writing the object with vals.update({'some_field': new_value})}
+	return super(${1:model_with_underscores}, self).write(cr, uid, ids, vals, context=context)
+
+endsnippet
+
+snippet defname_get
+def name_get(self, cr, uid, ids, context=None):
+	if not len(ids):
+		return []
+	if context is None:
+		context = {}
+	res = []
+	for o in self.browse(cr, uid, ids, context=context):
+		${0:res.append((o.id, "[%s] %s" % (o.field1, field2)))}
+	return res  # It must return a list of tuples [(id1, name1), (id2, name2)]
+
+endsnippet
