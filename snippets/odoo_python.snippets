@@ -27,6 +27,7 @@ def complete(t, opts):
 		'track_visibility': ['onchange', 'always'],
 		'ondelete': ['cascade', 'restrict', 'set null'],
 		'widgets': ['char', 'id', 'email', 'url', 'text', 'html', 'date', 'datetime', 'selection', 'many2one', 'many2onebutton', 'many2many', 'many2many_tags', 'many2many_kanban', 'one2many', 'one2many_list', 'reference', 'boolean', 'float', 'integer', 'float_time', 'progressbar', 'image', 'binary', 'many2many_binary', 'statusbar', 'monetary'],
+		'positions': ['before', 'after', 'inside', 'replace'],
 		'colors': ['todo', 'todo'],  # TODO
 		'fonts': ['todo', 'todo'],  # TODO
 	}
@@ -116,6 +117,16 @@ snippet ffloat "fields.float" b
 $0
 endsnippet
 
+snippet ffunction "fields.function" b
+'${1:fieldname}': fields.function(_$1, string=u'${2:Pretty name of your field}', type="$3`!p snip.rv = complete(t[3], 'fieldtypes')`", ${4:`!p snip.rv = ffunction_field_type(t[3]) `}
+	${5:store={
+		'${6:current.model.with.underscores}': (lambda self, cr, uid, ids, c={}: ids, [${7:'field1', 'field2'}], 20),
+		'${8:different.model.with.underscores}': (_get_`!p snip.rv = points2underscores(t[6])`_from_`!p snip.rv = points2underscores(t[7])`, [${9:'field1', 'field2'}], 20),
+	},}
+	${10:multi='${11:arbitrary_name}'}, $12),
+$0
+endsnippet
+
 snippet finteger "fields.integer" b
 '${1:fieldname}': fields.integer(u'${2:Field Name}', $3),
 $0
@@ -136,22 +147,25 @@ snippet fm2m "fields.many2many" b
 $0
 endsnippet
 
-snippet ffunction "fields.function" b
-'${1:fieldname}': fields.function(_$1, string=u'${2:Pretty name of your field}', type="$3`!p snip.rv = complete(t[3], 'fieldtypes')`", ${4:`!p snip.rv = ffunction_field_type(t[3]) `}
-	${5:store={
-		'${6:current_model_with_underscores}': (lambda self, cr, uid, ids, c={}: ids, [${7:'field1', 'field2'}], 20),
-		'${8:different_model_with_underscores}': (_get_$6_from_$7, [${9:'field1', 'field2'}], 20),
-	},}
-	${10:multi='${11:arbitrary_name}'}, $12),
-$0
-endsnippet
-
 snippet frelated "fields.related" b
 '${1:fieldname}': fields.related('${2:another_relation_field_in_this_model}', '${3:field_in_remote_model}', string=u'${4:Pretty name of your field}', type="$5`!p snip.rv = complete(t[5], 'fieldtypes')`", ${6:`!p snip.rv = ffunction_field_type(t[5]) `}
 	${7:store={
-		'${8:current_model_with_underscores}': (lambda self, cr, uid, ids, c={}: ids, [${9:'$2'}], 20),
-		'${10:model_of_the_relation_field_with_underscores}': (_get_$8_from_$10, [${11:'$3'}], 20),
+		'${8:current.model.with.points}': (lambda self, cr, uid, ids, c={}: ids, [${9:'$2'}], 20),
+		'${10:model.of.the.relation.field.with.points}': (_get_`!p snip.rv = points2underscores(t[8])`_from_`!p snip.rv = points2underscores(t[10])`, [${11:'$3'}], 20),
 	},} $13),
+$0
+endsnippet
+
+snippet fselection "fields.selection" b
+'${1:fieldname}': fields.selection([
+	('${3:state1}', u'${4:Name 1}'),
+	('${5:state2}', u'${6:Name 2}'),
+	], u'${2:Name}', $7),
+$0
+endsnippet
+
+snippet ftext "fields.text" b
+'${1:fieldname}': fields.text(u'${2:Field Name}', ${3:translate=True, }$4),
 $0
 endsnippet
 
@@ -159,7 +173,7 @@ endsnippet
 # Fields types' attributes
 ####################################################################################################
 
-snippet required "" !b
+snippet required ""
 required=${1:True}, $0
 endsnippet
 
@@ -169,6 +183,12 @@ endsnippet
 
 snippet columns "" !b
 _columns = {
+	$0
+}
+endsnippet 
+
+snippet defaults "" !b
+_defaults = {
 	$0
 }
 endsnippet 
@@ -344,6 +364,16 @@ endsnippet
 ####################################################################################################
 # Miscelaneous
 ####################################################################################################
+
+snippet def "def -> regular function" b
+def ${1:function_name}(self, cr, uid, ids, context=None):
+	if context is None:
+		context = {}
+	res = {}
+	${0:# Do some stuff here}
+	return res
+
+endsnippet
 
 snippet logger "" b
 _logger.error("$1 = %s" % ($1, ))

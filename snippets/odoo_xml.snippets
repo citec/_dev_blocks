@@ -4,6 +4,27 @@ def points2underscores(txt):
 
 def underscores2points(txt):
 	return txt.replace('_', '.')
+
+def complete(t, opts):
+	options = {
+		'fieldtypes': ['integer', 'boolean', 'float', 'char', 'text', 'date', 'datetime', 'one2many', 'many2many', 'many2one', 'binary', 'selection', 'related'],
+		'weekdays': ['monday', 'tuesday'],
+		'operators': ['=', 'like', 'ilike', '<', '>', '<=', '>=', 'in', 'not in'],
+		'viewtypes': ['tree', 'form', 'search', 'calendar', 'graph'],
+		'track_visibility': ['onchange', 'always'],
+		'ondelete': ['cascade', 'restrict', 'set null'],
+		'widgets': ['char', 'id', 'email', 'url', 'text', 'html', 'date', 'datetime', 'selection', 'many2one', 'many2onebutton', 'many2many', 'many2many_tags', 'many2many_kanban', 'one2many', 'one2many_list', 'reference', 'boolean', 'float', 'integer', 'float_time', 'progressbar', 'image', 'binary', 'many2many_binary', 'statusbar', 'monetary'],
+		'positions': ['before', 'after', 'inside', 'replace'],
+		'colors': ['todo', 'todo'],  # TODO
+		'fonts': ['todo', 'todo'],  # TODO
+	}
+	if isinstance(opts, str) and opts in options:
+		opts = options[opts]
+	if t:
+		opts = [ m[len(t):] for m in opts if m.startswith(t) ]
+	if len(opts) == 1:
+		return opts[0]
+	return '(' + '|'.join(opts) + ')'
 endglobal
 
 snippet xml
@@ -31,6 +52,12 @@ endsnippet
 snippet field
 <field name="$1">$2</field>
 $0
+endsnippet
+
+snippet xpath "XPath Element" b
+<xpath expr="${1://Some[@expression='here']}" position="$2`!p snip.rv = complete(t[2], 'positions')`">
+	${0:${VISUAL}}
+</xpath>
 endsnippet
 
 snippet fv
@@ -80,8 +107,8 @@ snippet inherit
 $0
 endsnippet
 
-snippet view
-<record id="view_`!p snip.rv = points2underscores(t[1])`_${2:form|tree|search|calendar|graph}" model="ir.ui.view">
+snippet view "" b
+<record id="view_`!p snip.rv = points2underscores(t[1])`_$2`!p snip.rv = complete(t[2], 'viewtypes')`" model="ir.ui.view">
 	<field name="name">${3:$1.$2}</field>
 	<field name="model">${1:model.with.points.here}</field>
 	<field name="arch" type="xml">
