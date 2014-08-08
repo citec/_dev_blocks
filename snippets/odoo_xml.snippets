@@ -61,7 +61,8 @@ snippet xpath "XPath Element" b
 endsnippet
 
 snippet fv
-<field name="$1" $0/>
+<field name="$1" $2/>
+$0
 endsnippet
 
 snippet string
@@ -135,6 +136,14 @@ snippet group
 <group${1: string="${3:Some title here, optional}"}>
 	$0
 </group>
+endsnippet
+
+snippet notebook "notebook" b
+<notebook>
+	<page string="${1:Page title}">
+		$0
+	</page>
+</notebook>
 endsnippet
 
 snippet groups

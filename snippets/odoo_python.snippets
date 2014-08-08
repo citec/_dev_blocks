@@ -97,6 +97,11 @@ endsnippet
 # Field types
 ####################################################################################################
 
+snippet fboolean "fields.boolean" b
+'${1:fieldname}': fields.boolean(u'${2:Field Name}', $5),
+$0
+endsnippet
+
 snippet fchar "fields.char" b
 '${1:fieldname}': fields.char(u'${2:Field Name}', size=${3:64}, ${4:translate=True, }$5),
 $0
@@ -177,31 +182,31 @@ snippet required ""
 required=${1:True}, $0
 endsnippet
 
-snippet track_visibility "" !b
+snippet track_visibility ""
 track_visibility='$1`!p snip.rv = complete(t[1], 'track_visibility')`', $0
 endsnippet
 
-snippet columns "" !b
+snippet columns ""
 _columns = {
 	$0
 }
 endsnippet 
 
-snippet defaults "" !b
+snippet defaults ""
 _defaults = {
 	$0
 }
 endsnippet 
 
-snippet help "" !b
+snippet help ""
 help=u'${1:Some help here}', $0
 endsnippet
 
-snippet dom "" !b
+snippet dom ""
 ('${1:field}', '$2`!p snip.rv = complete('operators')`', ${3:value})
 endsnippet
 
-snippet domain "" !b
+snippet domain ""
 ('${1:field}', '$2`!p snip.rv = complete('operators')`', ${3:value})
 endsnippet
 
@@ -234,15 +239,15 @@ endsnippet
 # ORM calls
 ####################################################################################################
 
-snippet create "" !b
+snippet create ""
 $2create(cr, uid, ${1:vals}, context)$0
 endsnippet
 
-snippet browse "" !b
+snippet browse ""
 $2browse(cr, uid, ${1:ids}, context)$0
 endsnippet
 
-snippet search "" !b
+snippet search ""
 $10search(cr, uid, ${1:domain},${2: offset=${3:0},}${4: limit=${5:50},}${6: order='${7:field ASC}',}${8: count=${9:True},} context=None, )$0
 endsnippet
 
@@ -352,11 +357,44 @@ endsnippet
 ####################################################################################################
 snippet defstore "def store_function_get_model1_from_model2" b
 def _get_${1:destination_model}_from_${2:origin_model}(self, cr, uid, ids, context=None):
+	if context is None:
+		context = {}
 	res = {}
 	for o in self.pool['`!p snip.rv = underscores2points(t[2])`'].browse(cr, uid, ids, context=context):
 		${4:# Add some logic here}
 		res[o.${3:parent_id.id}] = True
 	return res.keys()
+
+$0
+endsnippet
+
+snippet deffunction "def function_field_helper" b
+def _${1:function_name}(self, cr, uid, ids, name, arg, context=None):
+	if context is None:
+		context = {}
+	res = {}
+	for o in self.browse(cr, uid, ids, context=context):
+		res[o.id] = ${2:None}  # Default value
+		${3:# TODO: some stuff here}
+		res[o.id] = ${4:None}  # Give it a value here
+	return res
+
+$0
+endsnippet
+
+snippet deffunctionmulti "def function_field_helper (with multi)" b
+def _${1:function_name}(self, cr, uid, ids, name, arg, context=None):
+	if context is None:
+		context = {}
+	res = {}
+	for o in self.browse(cr, uid, ids, context=context):
+		res[o.id] = ${2:None}  # Default value
+		${3:# TODO: some stuff here}
+		res[o.id] = {
+			'${4:field1}': ${5:value1},  # Give it a value here
+			'${6:field2}': ${7:value2},  # Give it a value here
+			}
+	return res
 
 $0
 endsnippet
@@ -372,6 +410,15 @@ def ${1:function_name}(self, cr, uid, ids, context=None):
 	res = {}
 	${0:# Do some stuff here}
 	return res
+
+endsnippet
+
+snippet defcron "Functions called by a cron job" b
+def ${1:function_name}(self, cr, uid, context=None):
+	if context is None:
+		context = {}
+	${2:# TODO : Do something here}
+	return True
 
 endsnippet
 
@@ -395,11 +442,11 @@ _logger.info("$1 = %s" % ($1, ))
 $0
 endsnippet 
 
-snippet strftime "" !b
+snippet strftime ""
 strftime('${2:'%Y-%m-%d %H:%M:%S'}')
 endsnippet
 
-snippet strptime "" !b
+snippet strptime ""
 strptime(${1:some_date_field}, '${2:'%Y-%m-%d %H:%M:%S'}')
 endsnippet
 
