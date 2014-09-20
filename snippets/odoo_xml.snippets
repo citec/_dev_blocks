@@ -10,13 +10,14 @@ def complete(t, opts):
 		'fieldtypes': ['integer', 'boolean', 'float', 'char', 'text', 'date', 'datetime', 'one2many', 'many2many', 'many2one', 'binary', 'selection', 'related'],
 		'weekdays': ['monday', 'tuesday'],
 		'operators': ['=', 'like', 'ilike', '<', '>', '<=', '>=', 'in', 'not in'],
-		'viewtypes': ['tree', 'form', 'search', 'calendar', 'graph'],
+		'viewtypes': ['tree', 'form', 'search', 'calendar', 'graph', 'diagram'],
 		'track_visibility': ['onchange', 'always'],
 		'ondelete': ['cascade', 'restrict', 'set null'],
 		'widgets': ['char', 'id', 'email', 'url', 'text', 'html', 'date', 'datetime', 'selection', 'many2one', 'many2onebutton', 'many2many', 'many2many_tags', 'many2many_kanban', 'one2many', 'one2many_list', 'reference', 'boolean', 'float', 'integer', 'float_time', 'progressbar', 'image', 'binary', 'many2many_binary', 'statusbar', 'monetary'],
 		'positions': ['before', 'after', 'inside', 'replace'],
 		'colors': ['todo', 'todo'],  # TODO
 		'fonts': ['todo', 'todo'],  # TODO
+		'editable': ['top', 'bottom'],
 	}
 	if isinstance(opts, str) and opts in options:
 		opts = options[opts]
@@ -118,6 +119,10 @@ snippet view "" b
 		</$2>
 	</field>
 </record>
+endsnippet
+
+snippet editable "editable"
+editable="$1`!p snip.rv = complete(t[1], 'editable')`" $0
 endsnippet
 
 snippet kv

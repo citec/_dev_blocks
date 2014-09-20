@@ -118,7 +118,7 @@ $0
 endsnippet
 
 snippet ffloat "fields.float" b
-'${1:fieldname}': fields.float(u'${2:Field Name}', ${3:digits_compute=dp.get_precision('Account'), }$4)  # Remember to import dp
+'${1:fieldname}': fields.float(u'${2:Field Name}', ${3:digits_compute=dp.get_precision('Account'), }$4),  # Remember to import dp
 $0
 endsnippet
 
@@ -127,8 +127,7 @@ snippet ffunction "fields.function" b
 	${5:store={
 		'${6:current.model.with.underscores}': (lambda self, cr, uid, ids, c={}: ids, [${7:'field1', 'field2'}], 20),
 		'${8:different.model.with.underscores}': (_get_`!p snip.rv = points2underscores(t[6])`_from_`!p snip.rv = points2underscores(t[7])`, [${9:'field1', 'field2'}], 20),
-	},}
-	${10:multi='${11:arbitrary_name}'}, $12),
+	},}${10: multi='${11:arbitrary_name}',} $12),
 $0
 endsnippet
 
@@ -177,6 +176,10 @@ endsnippet
 ####################################################################################################
 # Fields types' attributes
 ####################################################################################################
+
+snippet ondelete "ondelete"
+ondelete="$1`!p snip.rv = complete(t[1], 'ondelete')`", $0
+endsnippet
 
 snippet required ""
 required=${1:True}, $0
@@ -399,6 +402,14 @@ def _${1:function_name}(self, cr, uid, ids, name, arg, context=None):
 $0
 endsnippet
 
+snippet deffnct_search "def fnct_search" b
+def _${1:function_name}(self, cr, uid, obj, name, domain, context=None):
+	${2:# Use the domain passed as argument}
+	return [${3:('return', 'some', 'domain')}]
+
+$0
+endsnippet
+
 ####################################################################################################
 # Miscelaneous
 ####################################################################################################
@@ -410,6 +421,13 @@ def ${1:function_name}(self, cr, uid, ids, context=None):
 	res = {}
 	${0:# Do some stuff here}
 	return res
+
+endsnippet
+
+snippet defbutton "Function called by buttons" b
+def button_${1:function_name}(self, cr, uid, ids, context=None):
+	${0:# TODO : Do something here}
+	return True
 
 endsnippet
 
