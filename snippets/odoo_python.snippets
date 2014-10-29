@@ -53,8 +53,11 @@ endsnippet
 
 snippet importopenerp "" b
 from openerp.osv import osv, fields, orm
-from openerp.tools.translate import _
-$0
+from openerp.tools.translate import _ $0
+endsnippet
+
+snippet importapi "from openerp import api" b
+from openerp import api $0
 endsnippet
 
 snippet import_ "" b
@@ -64,20 +67,17 @@ endsnippet
 snippet importdatetime "" b
 from datetime import datetime, timedelta
 from dateutil import relativedelta
-from dateutil.parser import parse
-$0
+from dateutil.parser import parse $0
 endsnippet
 
 snippet importdp "" b
-from openerp.addons.decimal_precision import decimal_precision as dp
-$0
+from openerp.addons.decimal_precision import decimal_precision as dp $0
 endsnippet
 
 snippet importlog "" b
 import logging
 
-_logger = logging.getLogger(__name__)
-$0
+_logger = logging.getLogger(__name__) $0
 endsnippet 
 
 ####################################################################################################
@@ -98,28 +98,23 @@ endsnippet
 ####################################################################################################
 
 snippet fboolean "fields.boolean" b
-'${1:fieldname}': fields.boolean(u'${2:Field Name}', $5),
-$0
+'${1:fieldname}': fields.boolean(u'${2:Field Name}', $5), $0
 endsnippet
 
 snippet fchar "fields.char" b
-'${1:fieldname}': fields.char(u'${2:Field Name}', size=${3:64}, ${4:translate=True, }$5),
-$0
+'${1:fieldname}': fields.char(u'${2:Field Name}', size=${3:64}, ${4:translate=True, }$5), $0
 endsnippet
 
 snippet fdate "fields.date" b
-'${1:fieldname}': fields.date(u'${2:Field Name}', $3),
-$0
+'${1:fieldname}': fields.date(u'${2:Field Name}', $3), $0
 endsnippet
 
 snippet fdatetime "fields.datetime" b
-'${1:fieldname}': fields.datetime(u'${2:Field Name}', $3),
-$0
+'${1:fieldname}': fields.datetime(u'${2:Field Name}', $3), $0
 endsnippet
 
 snippet ffloat "fields.float" b
-'${1:fieldname}': fields.float(u'${2:Field Name}', ${3:digits_compute=dp.get_precision('Account'), }$4),  # Remember to import dp
-$0
+'${1:fieldname}': fields.float(u'${2:Field Name}', ${3:digits_compute=dp.get_precision('Account'), }$4),  # Remember to import dp $0
 endsnippet
 
 snippet ffunction "fields.function" b
@@ -127,28 +122,23 @@ snippet ffunction "fields.function" b
 	${5:store={
 		'${6:current.model.with.underscores}': (lambda self, cr, uid, ids, c={}: ids, [${7:'field1', 'field2'}], 20),
 		'${8:different.model.with.underscores}': (_get_`!p snip.rv = points2underscores(t[6])`_from_`!p snip.rv = points2underscores(t[7])`, [${9:'field1', 'field2'}], 20),
-	},}${10: multi='${11:arbitrary_name}',} $12),
-$0
+	},}${10: multi='${11:arbitrary_name}',} $12), $0
 endsnippet
 
 snippet finteger "fields.integer" b
-'${1:fieldname}': fields.integer(u'${2:Field Name}', $3),
-$0
+'${1:fieldname}': fields.integer(u'${2:Field Name}', $3), $0
 endsnippet
 
 snippet fo2m "fields.one2many" b
-'${1:fieldname}': fields.one2many('${2:reference.model}', '${3:reference_field}_id', u'${4:Field Name}', $5),
-$0
+'${1:fieldname}': fields.one2many('${2:reference.model}', '${3:reference_field}_id', u'${4:Field Name}', $5), $0
 endsnippet
 
 snippet fm2o "fields.many2one" b
-'${1:fieldname}': fields.many2one('${2:reference.model}', u'${3:Field Name}', $6),
-$0
+'${1:fieldname}': fields.many2one('${2:reference.model}', u'${3:Field Name}', $6), $0
 endsnippet
 
 snippet fm2m "fields.many2many" b
-'${1:fieldname}': fields.many2many('${2:reference.model}', '${3:this_model}_`!p snip.rv = points2underscores(t[2])`_rel', '${4:remote_model_field}_id', '${5:`!p snip.rv = t[1][:-1]`}', string=u'${6:Field Name}', $7),
-$0
+'${1:fieldname}': fields.many2many('${2:reference.model}', '${3:this_model}_`!p snip.rv = points2underscores(t[2])`_rel', '${4:remote_model_field}_id', '${5:`!p snip.rv = t[1][:-1]`}', string=u'${6:Field Name}', $7), $0
 endsnippet
 
 snippet frelated "fields.related" b
@@ -156,21 +146,27 @@ snippet frelated "fields.related" b
 	${7:store={
 		'${8:current.model.with.points}': (lambda self, cr, uid, ids, c={}: ids, [${9:'$2'}], 20),
 		'${10:model.of.the.relation.field.with.points}': (_get_`!p snip.rv = points2underscores(t[8])`_from_`!p snip.rv = points2underscores(t[10])`, [${11:'$3'}], 20),
-	},} $13),
-$0
+	},} $13), $0
 endsnippet
 
 snippet fselection "fields.selection" b
 '${1:fieldname}': fields.selection([
 	('${3:state1}', u'${4:Name 1}'),
 	('${5:state2}', u'${6:Name 2}'),
-	], u'${2:Name}', $7),
-$0
+	], u'${2:Name}', $7), $0
+endsnippet
+
+snippet fsequence "fields.sequence" b
+_columns = {
+	'${1:field_name}': fields.integer(u'${2:Pretty name}', ),
+}
+_defaults = {
+	'$1': lambda self, cr, uid, context={}: self.pool['ir.sequence'].get(cr, uid, '${2:the_name_or_your_sequence}'),
+}
 endsnippet
 
 snippet ftext "fields.text" b
-'${1:fieldname}': fields.text(u'${2:Field Name}', ${3:translate=True, }$4),
-$0
+'${1:fieldname}': fields.text(u'${2:Field Name}', ${3:translate=True, }$4), $0
 endsnippet
 
 ####################################################################################################
@@ -194,6 +190,13 @@ _columns = {
 	$0
 }
 endsnippet 
+
+snippet constraint "SQL Constraint"
+_sql_constraints = [
+	('${1:fieldname}_uniq', 'UNIQUE($1${2:, ${3:another_field}})', u'${4:Error message here}')
+]
+$0
+endsnippet
 
 snippet defaults ""
 _defaults = {
@@ -324,9 +327,12 @@ def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, addi
 		'value': {
 			'${4:modified_field}': ${5:new_value},
 		},
-		${6:'warning': {
-			'title': _('${7:Some Title Here}'),
-			'message' : _('${8:Some Warning message}')
+		'domain': {
+			'${6:modified_field}': ${7:new_value},
+		},
+		${8:'warning': {
+			'title': _('${9:Some Title Here}'),
+			'message' : _('${10:Some Warning message}')
 		}}
 	}
 
