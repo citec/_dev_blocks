@@ -7,6 +7,7 @@ def underscores2points(txt):
 
 def complete(t, opts):
 	options = {
+		'attrs': ['invisible', 'readonly', 'required'],
 		'fieldtypes': ['integer', 'boolean', 'float', 'char', 'text', 'date', 'datetime', 'one2many', 'many2many', 'many2one', 'binary', 'selection', 'related'],
 		'weekdays': ['monday', 'tuesday'],
 		'operators': ['=', 'like', 'ilike', '<', '>', '<=', '>=', 'in', 'not in'],
@@ -100,7 +101,7 @@ widget="${1:char|id|email|url|text|html|date|datetime|selection|many2one|many2on
 endsnippet
 
 snippet attrs
-attrs="{'${1:readonly|invisible}': ${2:[('some', '=', 'domain')]}}" $0
+attrs="{'$1`!p snip.rv = complete(t[1], 'attrs')`': ${2:[('some', '=', 'domain')]}}" $0
 endsnippet
 
 snippet attribute "attribute"

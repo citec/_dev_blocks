@@ -105,6 +105,10 @@ snippet fchar "fields.char" b
 '${1:fieldname}': fields.char(u'${2:Field Name}', size=${3:64}, ${4:translate=True, }$5), $0
 endsnippet
 
+snippet fbinary "fields.binary" b
+'${1:fieldname}': fields.binary(u'${2:Field Name}', $3), $0
+endsnippet
+
 snippet fdate "fields.date" b
 '${1:fieldname}': fields.date(u'${2:Field Name}', $3), $0
 endsnippet
@@ -467,11 +471,11 @@ $0
 endsnippet 
 
 snippet strftime ""
-strftime('${2:'%Y-%m-%d %H:%M:%S'}')
+strftime('${2:%Y-%m-%d %H:%M:%S}')
 endsnippet
 
 snippet strptime ""
-strptime(${1:some_date_field}, '${2:'%Y-%m-%d %H:%M:%S'}')
+strptime(${1:some_date_field}, '${2:%Y-%m-%d %H:%M:%S}')
 endsnippet
 
 snippet todo "TODO comment" b
