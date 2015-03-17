@@ -97,7 +97,7 @@ context="{'${1:field}': ${2:'value'}, $3}" $0
 endsnippet
 
 snippet widget
-widget="${1:char|id|email|url|text|html|date|datetime|selection|many2one|many2onebutton|many2many|many2many_tags|many2many_kanban|one2many|one2many_list|reference|boolean|float|integer|float_time|progressbar|image|binary|many2many_binary|statusbar|monetary}"${2: options="{${3:'field1': 'value1'}}"} $0
+widget="$1`!p snip.rv = complete(t[1], 'widgets')`"${2: options="{${3:'field1': 'value1'}}"} $0
 endsnippet
 
 snippet attrs
@@ -133,6 +133,16 @@ snippet view "" b
 		</$2>
 	</field>
 </record>
+endsnippet
+
+snippet groupby "Group by in search view" b
+<group expand="0" string="${1:Group By...}">
+	<filter string="${2:STRING}" domain="[]" context="{'group_by': '${3:field_name}'}" />$0
+</group>
+endsnippet
+
+snippet separator "Separator" b
+<separator />
 endsnippet
 
 snippet button "Button" b
