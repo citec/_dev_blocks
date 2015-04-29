@@ -53,8 +53,7 @@ endsnippet
 ####################################################################################################
 
 snippet importopenerp "" b
-from openerp.osv import osv, fields, orm
-from openerp.tools.translate import _ $0
+from openerp.osv import osv, fields, orm$0
 endsnippet
 
 snippet importapi "from openerp import api" b
@@ -321,7 +320,7 @@ def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, 
 
 endsnippet
 
-snippet defonchange "def onchange" b
+snippet defonchange7 "def onchange" b
 def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, additionalField2, }context=None):
 	if not $1:
 		return {}
@@ -342,6 +341,13 @@ def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, addi
 	}
 
 $0
+endsnippet
+
+snippet defonchange "api.onchange function" b
+@api.onchange('${1:field1}'${2:, 'field2'})
+def on_change_$1(self):
+	self.${3:some_field} = ${4:'some_stuff'}
+	$0
 endsnippet
 
 snippet defwrite "def write" b
@@ -470,6 +476,10 @@ snippet loginfo "" b
 _logger.info("$1 = %s" % ($1, ))
 $0
 endsnippet 
+
+snippet raise "raise" b
+raise orm.except_orm(_(u'${1:Title}'), _(u'${2:Message}')${3: % (${4:param1, param2, })})$0
+endsnippet
 
 snippet strftime ""
 strftime('${2:%Y-%m-%d %H:%M:%S}')
