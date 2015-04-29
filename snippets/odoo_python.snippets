@@ -30,6 +30,7 @@ def complete(t, opts):
 		'positions': ['before', 'after', 'inside', 'replace'],
 		'colors': ['todo', 'todo'],  # TODO
 		'fonts': ['todo', 'todo'],  # TODO
+		'viewtargets': ['current', 'new'],
 	}
 	if isinstance(opts, str) and opts in options:
 		opts = options[opts]
@@ -480,5 +481,23 @@ endsnippet
 
 snippet todo "TODO comment" b
 # TODO ${1: 1-5 priority (the lower the more prioritary)}: ${2:Write something that need to me done here} (`date +%d`/`date +%m`/`date +%Y` by: `getent passwd "jash" | cut -d ':' -f 5`)
+$0
+endsnippet
+
+snippet returnview "return view from python function" b
+res = self.pool.get('ir.model.data').get_object_reference(cr, uid, '${1:module_name}', '${2:view_xml_id}')
+return {
+	'name': '${3:View Title}',
+	'view_type': '$4`!p snip.rv = complete(t[4], 'viewtypes')`',
+	'view_mode': 'form',
+	'view_id': [res and res[1] or False],
+	'res_model': '${5:model.with.points}',
+	'context': "{}",
+	'type': 'ir.actions.act_window',
+	'nodestroy': True,
+	'target': 'current',
+	'target': '$6`!p snip.rv = complete(t[6], 'viewtargets')`',
+	'res_id': ${7:variable_with_id or False},
+	}
 $0
 endsnippet
