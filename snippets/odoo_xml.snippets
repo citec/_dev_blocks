@@ -123,6 +123,12 @@ snippet inherit
 $0
 endsnippet
 
+snippet finherit
+<field name="${1:original_field}" position="$2`!p snip.rv = complete(t[2], 'positions')`">
+	$0
+</field>
+endsnippet
+
 snippet view "" b
 <record id="view_`!p snip.rv = points2underscores(t[1])`_$2`!p snip.rv = complete(t[2], 'viewtypes')`" model="ir.ui.view">
 	<field name="name">${3:$1.$2}</field>

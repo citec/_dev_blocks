@@ -213,11 +213,11 @@ help=u'${1:Some help here}', $0
 endsnippet
 
 snippet dom ""
-('${1:field}', '$2`!p snip.rv = complete('operators')`', ${3:value})
+('${1:field}', '$2`!p snip.rv = complete(t[2], 'operators')`', ${3:value})
 endsnippet
 
 snippet domain ""
-('${1:field}', '$2`!p snip.rv = complete('operators')`', ${3:value})
+domain=[('${1:field}', '$2`!p snip.rv = complete(t[2], 'operators')`', ${3:value})]
 endsnippet
 
 ####################################################################################################
@@ -421,7 +421,7 @@ endsnippet
 
 snippet deffnct_search "def fnct_search" b
 def _${1:function_name}(self, cr, uid, obj, name, domain, context=None):
-	${2:# Use the domain passed as argument}
+	${2:# Use the domain passed as argument, you have the name of the field being searched n the 'name' param}
 	return [${3:('return', 'some', 'domain')}]
 
 $0
