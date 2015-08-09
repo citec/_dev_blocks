@@ -242,13 +242,13 @@ snippet act_window_multi "Description" b
 	<field eval="1" name="sequence"/>
 	<field name="view_mode">$6</field>
 	<field name="view_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$6"/>
-	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`"/>
+	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$2"/>
 </record>
 <record id="action_`!p snip.rv = points2underscores(t[1])`_$7`!p snip.rv = complete(t[7], 'viewtypes')`_$2" model="ir.actions.act_window.view">
 	<field eval="1" name="sequence"/>
 	<field name="view_mode">$7</field>
 	<field name="view_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$7"/>
-	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`"/>
+	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$2"/>
 </record>
 <menuitem id="menu_`!p snip.rv = points2underscores(t[1])`_$2" action="action_`!p snip.rv = points2underscores(t[1])`_$2" parent="${8:parent_xmlid}" sequence="${9:10}" />
 $0
