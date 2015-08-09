@@ -93,6 +93,10 @@ class ${1:modulenale_modelname}(osv.osv):
 	$0
 endsnippet
 
+snippet thread "inherit from mail.thread an ir.needaction.mixin" b
+_inherit = ['mail.thread', 'ir.needaction_mixin']
+endsnippet
+
 ####################################################################################################
 # Field types
 ####################################################################################################

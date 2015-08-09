@@ -208,12 +208,51 @@ snippet actwindow
 	<field name="type">ir.actions.act_window</field>
 	<field name="res_model">${1:model.with.points}</field>
 	<field name="view_type">${3:form}</field>
-	<field name="view_mode">${4:tree,form,calendar,graph}</field>
+	<field name="view_mode">$4`!p snip.rv = complete(t[4], 'viewtypes')`</field>
 	<field name="context">{}</field>
 	<field name="domain">[]</field>
 </record>
 <menuitem action="action_`!p snip.rv = points2underscores(t[1])`" id="menu_`!p snip.rv = points2underscores(t[1])`" parent="${5:parent_xmlid}" sequence="${6:10}" />
 $0
+endsnippet
+snippet act_window
+<record id="action_`!p snip.rv = points2underscores(t[1])`" model="ir.actions.act_window">
+	<field name="name">${2:Name of action and menu}</field>
+	<field name="type">ir.actions.act_window</field>
+	<field name="res_model">${1:model.with.points}</field>
+	<field name="view_type">${3:form}</field>
+	<field name="view_mode">$4`!p snip.rv = complete(t[4], 'viewtypes')`</field>
+	<field name="context">{}</field>
+	<field name="domain">[]</field>
+</record>
+<menuitem action="action_`!p snip.rv = points2underscores(t[1])`" id="menu_`!p snip.rv = points2underscores(t[1])`" parent="${5:parent_xmlid}" sequence="${6:10}" />
+$0
+endsnippet
+snippet act_window_multi "Description" b
+<record id="action_`!p snip.rv = points2underscores(t[1])`_${2:special_name}" model="ir.actions.act_window">
+	<field name="name">${3:Name of action and menu}</field>
+	<field name="type">ir.actions.act_window</field>
+	<field name="res_model">${1:model.with.points}</field>
+	<field name="view_type">${4:form}</field>
+	<field name="view_mode">${5:tree,form,calendar,graph}</field>
+	<field name="context">{}</field>
+	<field name="domain">[]</field>
+</record>
+<record id="action_`!p snip.rv = points2underscores(t[1])`_$6`!p snip.rv = complete(t[6], 'viewtypes')`_$2" model="ir.actions.act_window.view">
+	<field eval="1" name="sequence"/>
+	<field name="view_mode">$6</field>
+	<field name="view_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$6"/>
+	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`"/>
+</record>
+<record id="action_`!p snip.rv = points2underscores(t[1])`_$7`!p snip.rv = complete(t[7], 'viewtypes')`_$2" model="ir.actions.act_window.view">
+	<field eval="1" name="sequence"/>
+	<field name="view_mode">$7</field>
+	<field name="view_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$7"/>
+	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`"/>
+</record>
+<menuitem action="action_`!p snip.rv = points2underscores(t[1])`" id="menu_`!p snip.rv = points2underscores(t[1])`" parent="${8:parent_xmlid}" sequence="${9:10}" />
+$0
+
 endsnippet
 
 snippet chatter "oe_chatter" b
@@ -221,6 +260,10 @@ snippet chatter "oe_chatter" b
 	<field name="message_follower_ids" widget="mail_followers" groups="base.group_user" />
 	<field name="message_ids" widget="mail_thread" />
 </div>
+endsnippet
+
+snippet domain "domain attr" 
+domain="[('${1:some_field}', '$2`!p snip.rv = complete(t[2], 'operators')`', ${3:some_value})]" $0
 endsnippet
 
 snippet footer "footer" b
