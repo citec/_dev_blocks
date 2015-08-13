@@ -102,7 +102,7 @@ widget="$1`!p snip.rv = complete(t[1], 'widgets')`"${2: options="{${3:'field1': 
 endsnippet
 
 snippet attrs
-attrs="{'$1`!p snip.rv = complete(t[1], 'attrs')`': ${2:[('some', '=', 'domain')]}}" $0
+attrs="{'$1`!p snip.rv = complete(t[1], 'attrs')`': ${2:[('${3:some}', '=', ${4:'domain'})]}}" $0
 endsnippet
 
 snippet attribute "attribute"
@@ -149,7 +149,7 @@ snippet groupby "Group by in search view" b
 endsnippet
 
 snippet separator "Separator" b
-<separator />
+<separator ${1:string="${2:Some string}" }/>$0
 endsnippet
 
 snippet button "Button" b
@@ -241,18 +241,17 @@ snippet act_window_multi "Description" b
 <record id="action_`!p snip.rv = points2underscores(t[1])`_$6`!p snip.rv = complete(t[6], 'viewtypes')`_$2" model="ir.actions.act_window.view">
 	<field eval="1" name="sequence"/>
 	<field name="view_mode">$6</field>
-	<field name="view_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$6"/>
+	<field name="view_id" ref="view_`!p snip.rv = points2underscores(t[1])`_$6_$2"/>
 	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$2"/>
 </record>
 <record id="action_`!p snip.rv = points2underscores(t[1])`_$7`!p snip.rv = complete(t[7], 'viewtypes')`_$2" model="ir.actions.act_window.view">
 	<field eval="1" name="sequence"/>
 	<field name="view_mode">$7</field>
-	<field name="view_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$7"/>
+	<field name="view_id" ref="view_`!p snip.rv = points2underscores(t[1])`_$7_$2"/>
 	<field name="act_window_id" ref="action_`!p snip.rv = points2underscores(t[1])`_$2"/>
 </record>
 <menuitem id="menu_`!p snip.rv = points2underscores(t[1])`_$2" action="action_`!p snip.rv = points2underscores(t[1])`_$2" parent="${8:parent_xmlid}" sequence="${9:10}" />
 $0
-
 endsnippet
 
 snippet chatter "oe_chatter" b
