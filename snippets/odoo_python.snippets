@@ -271,8 +271,7 @@ endsnippet
 
 snippet defcreate "def create" b
 def create(self, cr, uid, vals, context=None):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	${0:# you can modify vals before creating the object with vals.update({'some_field': new_value})}
 	id = super(${1:model_with_underscores}, self).create(cr, uid, vals, context=context)
 	return id
@@ -281,10 +280,8 @@ endsnippet
 
 snippet defcopy "def copy" b
 def copy(self, cr, uid, id, default=None, context=None):
-	if default is None:
-		default = {}
-	if context is None:
-		context = {}
+	default = dict(default or {})
+	context = dict(context or {})
 	${0:# you can modify values (default) before writing the object with default({'some_field': new_value})}
 	return super(${1:model_with_underscores}, self).copy(cr, uid, id, default=default, context=context)
 
@@ -292,8 +289,7 @@ endsnippet
 
 snippet deffields_view_get "def fields_view_get" b
 def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	ctx = context.copy()
 	res = super(${1:model_with_underscores}, self).fields_view_get(cr, uid, view_id, view_type, context=ctx, toolbar=toolbar)
 	if view_type == '$2`!p snip.rv = complete(t[2], 'viewtypes')`':
@@ -328,8 +324,7 @@ snippet defonchange7 "def onchange" b
 def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, additionalField2, }context=None):
 	if not $1:
 		return {}
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	${3:# Do something here}
 	return {
 		'value': {
@@ -356,8 +351,7 @@ endsnippet
 
 snippet defwrite "def write" b
 def write(self, cr, uid, ids, vals, context=None):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	${0:# you can modify vals before writing the object with vals.update({'some_field': new_value})}
 	return super(${1:model_with_underscores}, self).write(cr, uid, ids, vals, context=context)
 
@@ -367,8 +361,7 @@ snippet defname_get "def name_get" b
 def name_get(self, cr, uid, ids, context=None):
 	if not len(ids):
 		return []
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	res = []
 	for o in self.browse(cr, uid, ids, context=context):
 		${0:res.append((o.id, "[%s] %s" % (o.field1, field2)))}
@@ -376,13 +369,16 @@ def name_get(self, cr, uid, ids, context=None):
 
 endsnippet
 
+snippet super "super()" 
+super(${1:model_with_underscores}, self).${2:this_function_name}(${3:same, args, as, this, function})$0
+endsnippet
+
 ####################################################################################################
 # Function, Store and Related fields helper functions
 ####################################################################################################
 snippet defstore "def store_function_get_model1_from_model2" b
 def _get_${1:destination_model}_from_${2:origin_model}(self, cr, uid, ids, context=None):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	res = {}
 	for o in self.pool['`!p snip.rv = underscores2points(t[2])`'].browse(cr, uid, ids, context=context):
 		${4:# Add some logic here}
@@ -394,8 +390,7 @@ endsnippet
 
 snippet deffunction "def function_field_helper" b
 def _${1:function_name}(self, cr, uid, ids, name, arg, context=None):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	res = {}
 	for o in self.browse(cr, uid, ids, context=context):
 		res[o.id] = ${2:None}  # Default value
@@ -408,8 +403,7 @@ endsnippet
 
 snippet deffunctionmulti "def function_field_helper (with multi)" b
 def _${1:function_name}(self, cr, uid, ids, name, arg, context=None):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	res = {}
 	for o in self.browse(cr, uid, ids, context=context):
 		res[o.id] = ${2:None}  # Default value
@@ -437,8 +431,7 @@ endsnippet
 
 snippet def "def -> regular function" b
 def ${1:function_name}(self, cr, uid, ids, context=None):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	res = {}
 	${0:# Do some stuff here}
 	return res
@@ -454,8 +447,7 @@ endsnippet
 
 snippet defcron "Functions called by a cron job" b
 def ${1:function_name}(self, cr, uid, context=None):
-	if context is None:
-		context = {}
+	context = dict(context or {})
 	${2:# TODO : Do something here}
 	return True
 
