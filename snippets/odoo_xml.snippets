@@ -203,7 +203,7 @@ snippet tree
 endsnippet
 
 snippet colors "Tree colors" b
-colors="${1:red:assignee_id==False};" $0
+colors="${1:red:${2:${3:assignee_id}==${4:False}}};" $0
 endsnippet
 
 snippet actwindow

@@ -349,6 +349,24 @@ def on_change_$1(self):
 	$0
 endsnippet
 
+snippet defread "def read" b
+def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+	context = dict(context or {})
+	self.check_access_rule(cr, uid, ids, 'read', context=context)
+	${2:# you can modify fields before calling super()}
+	res = super(${1:model_with_underscores}, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+	${3:# you can modify res after calling super()}
+	return res
+endsnippet
+
+snippet defsearch "def search" b
+def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+	context = dict(context or {})
+	${1:# Do something here}
+	return super(${2:model_with_underscores}, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, count=count, context=context)
+$0
+endsnippet
+
 snippet defwrite "def write" b
 def write(self, cr, uid, ids, vals, context=None):
 	context = dict(context or {})
