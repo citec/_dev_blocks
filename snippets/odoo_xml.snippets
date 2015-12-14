@@ -5,6 +5,9 @@ def points2underscores(txt):
 def underscores2points(txt):
 	return txt.replace('_', '.')
 
+def lower_underscore(txt):
+	return "".join([c if c.isalnum() else "_" for c in txt.lower()])
+
 def complete(t, opts):
 	options = {
 		'attrs': ['invisible', 'readonly', 'required'],
@@ -78,7 +81,7 @@ snippet filter "Filter" b
 endsnippet
 
 snippet options "Options"
-options="{${1:${2:'no_create': 1, }${3:'no_create_edit': 0, }${4:'limit': ${5:10}, }}}"$0
+options="{${1:${2:'no_create': 1, }${3:'no_create_edit': 0, }${4:'no_open': 1, }${5:'limit': ${6:10}, }}}"$0
 endsnippet
 
 snippet string
@@ -256,6 +259,41 @@ snippet act_window_multi "Description" b
 </record>
 <menuitem id="menu_`!p snip.rv = points2underscores(t[1])`_$2" action="action_`!p snip.rv = points2underscores(t[1])`_$2" parent="${8:parent_xmlid}" sequence="${9:10}" />
 $0
+endsnippet
+
+snippet actionserver "ir.actions.server" b
+<record id="action_`!p snip.rv = points2underscores(t[1])`_`!p snip.rv = lower_underscore(t[2])`" model="ir.actions.server">
+	<field name="name">${2:Some title}</field>
+	<field name="model_id" ref="model_${1:model_with_underscores}" />
+	<field name="state">code</field>
+	<field name="condition"></field>
+	<field name="code">
+		${3:if context.get('active_model') == '`!p snip.rv = underscores2points(t[1])`' and context.get('active_ids'):
+			self.your_function(cr, uid, context.get('active_ids', []), context)}
+	</field>
+</record>
+endsnippet
+
+snippet actionmulti "client_action_multi" b
+<record id="action_`!p snip.rv = points2underscores(t[1])`_`!p snip.rv = lower_underscore(t[2])`" model="ir.actions.server">
+	<field name="name">$2</field>
+	<field name="model_id" ref="model_`!p snip.rv = points2underscores(t[1])`" />
+	<field name="state">code</field>
+	<field name="condition"></field>
+	<field name="code">
+		${3:if context.get('active_model') == '`!p snip.rv = underscores2points(t[1])`' and context.get('active_ids'):
+			self.send_pictures_to_web(cr, uid, context.get('active_ids', []), context)}
+	</field>
+</record>
+
+<record id="action_module_`!p snip.rv = points2underscores(t[1])`_`!p snip.rv = lower_underscore(t[2])`" model="ir.values">
+	<field name="model_id" ref="addtomo.model_`!p snip.rv = points2underscores(t[1])`" />
+	<field name="name">${2:Some title}</field>
+	<field name="key2">client_action_multi</field>
+	<field name="value" eval="'ir.actions.server,%d'%action_`!p snip.rv = points2underscores(t[1])`_`!p snip.rv = lower_underscore(t[2])`" />
+	<field name="key">action</field>
+	<field name="model">${1:model.with.points}</field>
+</record>
 endsnippet
 
 snippet chatter "oe_chatter" b
