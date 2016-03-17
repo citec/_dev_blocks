@@ -149,6 +149,10 @@ snippet fm2m "fields.many2many" b
 '${1:fieldname}': fields.many2many('${2:reference.model}', '${3:this_model}_`!p snip.rv = points2underscores(t[2])`_rel', '${4:remote_model_field}_id', '${5:`!p snip.rv = t[1][:-1]`}', string=u'${6:Field Name}', $7), $0
 endsnippet
 
+snippet freference "fields.reference" b
+'${1:fieldname}': fields.reference(u'${2:Field Name}', selection=${3:selection_list_of_model_tuples}, size=128, ), $0
+endsnippet
+
 snippet frelated "fields.related" b
 '${1:fieldname}': fields.related('${2:another_relation_field_in_this_model}', '${3:field_in_remote_model}', string=u'${4:Pretty name of your field}', type="$5`!p snip.rv = complete(t[5], 'fieldtypes')`", ${6:`!p snip.rv = ffunction_field_type(t[5]) `}
 	${7:store={
@@ -221,7 +225,7 @@ snippet dom ""
 endsnippet
 
 snippet domain ""
-domain=[('${1:field}', '$2`!p snip.rv = complete(t[2], 'operators')`', ${3:value})]
+domain=[('${1:field}', '$2`!p snip.rv = complete(t[2], 'operators')`', ${3:value})], 
 endsnippet
 
 ####################################################################################################
@@ -504,8 +508,7 @@ strptime(${1:some_date_field}, '${2:%Y-%m-%d %H:%M:%S}')
 endsnippet
 
 snippet todo "TODO comment" b
-# TODO ${1: 1-5 priority (the lower the more prioritary)}: ${2:Write something that need to me done here} (`date +%d`/`date +%m`/`date +%Y` by: `getent passwd "jash" | cut -d ':' -f 5`)
-$0
+# TODO ${1: 1-5 priority (the lower the more prioritary)}: ${2:Write something that need to me done here} (`date +%d`/`date +%m`/`date +%Y` by: `getent passwd "jash" | cut -d ':' -f 5`) $0
 endsnippet
 
 snippet returnview "return view from python function" b
