@@ -18,8 +18,8 @@ def complete(t, opts):
 		'viewtypes': ['tree', 'form', 'search', 'calendar', 'graph', 'diagram'],
 		'track_visibility': ['onchange', 'always'],
 		'ondelete': ['cascade', 'restrict', 'set null'],
-		'widgets': ['char', 'id', 'email', 'url', 'text', 'html', 'date', 'datetime', 'selection', 'many2one', 'many2onebutton', 'many2many', 'many2many_tags', 'many2many_kanban', 'one2many', 'one2many_list', 'reference', 'boolean', 'float', 'integer', 'float_time', 'progressbar', 'image', 'binary', 'many2many_binary', 'statusbar', 'monetary', 'handle', ],
-		'positions': ['before', 'after', 'inside', 'replace'],
+		'widgets': ['char', 'id', 'email', 'url', 'text', 'html', 'date', 'datetime', 'selection', 'radio', 'many2one', 'many2onebutton', 'many2many', 'many2many_tags', 'many2many_kanban', 'one2many', 'one2many_list', 'reference', 'boolean', 'float', 'integer', 'float_time', 'progressbar', 'image', 'binary', 'many2many_binary', 'statusbar', 'monetary', 'handle', ],
+		'positions': ['before', 'after', 'inside', 'replace', 'attributes'],
 		'colors': ['todo', 'todo'],  # TODO
 		'fonts': ['todo', 'todo'],  # TODO
 		'editable': ['top', 'bottom'],
@@ -36,11 +36,15 @@ endglobal
 snippet xml
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data noupdate="${1:0}">
+	<data>
 		
 		$0
 	</data>
 </openerp>
+endsnippet
+
+snippet noupdate "noupdate"
+noupdate="${1:1}" $0
 endsnippet
 
 snippet <!--
@@ -84,8 +88,12 @@ snippet filter "Filter" b
 <filter name="${1:some_name}" string="${2:Some String}" domain="[('${3:some_field}', '=', ${4:some_value})]" />$0
 endsnippet
 
+snippet filtertoday "Filter Today" b
+<filter string="Este Mes" name="due_date" domain="['&amp;', ('due_date', '&lt;', (context_today() + relativedelta(months=1)).strftime('%%Y-%%m-01')), ('due_date', '&gt;=', time.strftime('%%Y-%%m-01'))]" />$0
+endsnippet
+
 snippet options "Options"
-options="{${1:${2:'no_create': 1, }${3:'no_create_edit': 1, }${4:'no_open': 1, }${5:'limit': ${6:10}, }}}"$0
+options="{${1:${2:'no_create': 1, }${3:'no_create_edit': 1, }${4:'no_open': 1, }${5:'limit': ${6:20}, }}}"$0
 endsnippet
 
 snippet string
@@ -94,6 +102,10 @@ endsnippet
 
 snippet readonly
 readonly="${1:1}" $0
+endsnippet
+
+snippet required
+required="${1:1}" $0
 endsnippet
 
 snippet invisible
@@ -109,7 +121,7 @@ context="{'${1:field}': ${2:'value'}, $3}" $0
 endsnippet
 
 snippet widget
-widget="$1`!p snip.rv = complete(t[1], 'widgets')`"${2: options="{${3:'field1': 'value1'}}"} $0
+widget="$1`!p snip.rv = complete(t[1], 'widgets')`" $0
 endsnippet
 
 snippet attrs
@@ -149,6 +161,17 @@ snippet view "" b
 		<$2 string="${4:Title here}" version="${5:8.0}">
 			$0
 		</$2>
+	</field>
+</record>
+endsnippet
+
+snippet viewinherit "" b
+<record id="view_`!p snip.rv = points2underscores(t[1])`_$2`!p snip.rv = complete(t[2], 'viewtypes')`" model="ir.ui.view">
+	<field name="name">${3:$1.$2}</field>
+	<field name="model">${1:model.with.points.here}</field>
+	<field name="inherit_id" ref="${4:module_name.}${5:view_xml_id}" />
+	<field name="arch" type="xml">
+		$0
 	</field>
 </record>
 endsnippet
@@ -204,8 +227,7 @@ groups="${1:module_name.}${2:group_xml_id}"
 endsnippet
 
 snippet tree
-<tree string="${1:Title of view}" version="${2:8.0}" edit="1" create="1" delete="1">
-	$0
+<tree string="${1:Title of view}" version="${2:8.0}"${3: edit="1" create="1" delete="1"}$0>
 </tree>
 endsnippet
 
@@ -283,7 +305,7 @@ snippet actionmulti "client_action_multi" b
 	<field name="name">$2</field>
 	<field name="model_id" ref="model_`!p snip.rv = points2underscores(t[1])`" />
 	<field name="state">code</field>
-	<field name="condition"></field>
+	<field name="condition">True</field>
 	<field name="code">
 		${3:if context.get('active_model') == '`!p snip.rv = underscores2points(t[1])`' and context.get('active_ids'):
 			self.send_pictures_to_web(cr, uid, context.get('active_ids', []), context)}
@@ -291,7 +313,7 @@ snippet actionmulti "client_action_multi" b
 </record>
 
 <record id="action_module_`!p snip.rv = points2underscores(t[1])`_`!p snip.rv = lower_underscore(t[2])`" model="ir.values">
-	<field name="model_id" ref="addtomo.model_`!p snip.rv = points2underscores(t[1])`" />
+	<field name="model_id" ref="model_`!p snip.rv = points2underscores(t[1])`" />
 	<field name="name">${2:Some title}</field>
 	<field name="key2">client_action_multi</field>
 	<field name="value" eval="'ir.actions.server,%d'%action_`!p snip.rv = points2underscores(t[1])`_`!p snip.rv = lower_underscore(t[2])`" />

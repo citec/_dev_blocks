@@ -53,11 +53,15 @@ endsnippet
 ####################################################################################################
 
 snippet importopenerp "" b
-from openerp.osv import osv, fields, orm$0
+from openerp.osv import osv, fields$0
 endsnippet
 
 snippet importapi "from openerp import api" b
 from openerp import api $0
+endsnippet
+
+snippet importsuperuser "import SUPERUSER_ID" b
+from openerp import SUPERUSER_ID$0
 endsnippet
 
 snippet import_ "" b
@@ -71,7 +75,7 @@ from dateutil.parser import parse $0
 endsnippet
 
 snippet importdp "" b
-from openerp.addons.decimal_precision import decimal_precision as dp $0
+from openerp.addons.decimal_precision import decimal_precision as dp$0
 endsnippet
 
 snippet importlog "" b
@@ -87,8 +91,8 @@ endsnippet
 snippet class "" b
 class ${1:modulenale_modelname}(osv.osv):
     _name = '`!p snip.rv = underscores2points(t[1])`'
-    _inherit = '`!p snip.rv = underscores2points(t[1])`'
-    _description = u'${2:put some model description here}'
+    ${2:_inherit = '${3:`!p snip.rv = underscores2points(t[1])`}'
+    }_description = u'${4:put some model description here}'
 
 	$0
 endsnippet
@@ -110,7 +114,8 @@ snippet fchar "fields.char" b
 endsnippet
 
 snippet fbinary "fields.binary" b
-'${1:fieldname}': fields.binary(u'${2:Field Name}', $3), $0
+# Don't use binary fields, use attachment instead
+'${1:fieldname}': fields.many2one('ir.attachment', u'${2:Field Name}', $6), $0
 endsnippet
 
 snippet fdate "fields.date" b
@@ -338,8 +343,8 @@ def on_change_${1:main_field}(self, cr, uid, ids, $1, ${2:additionalField1, addi
 			'${6:modified_field}': ${7:new_value},
 		},
 		${8:'warning': {
-			'title': _('${9:Some Title Here}'),
-			'message' : _('${10:Some Warning message}')
+			'title': _(u'${9:Some Title Here}'),
+			'message': _(u'${10:Some Warning message}')
 		}}
 	}
 
@@ -461,7 +466,8 @@ def ${1:function_name}(self, cr, uid, ids, context=None):
 endsnippet
 
 snippet defbutton "Function called by buttons" b
-def button_${1:function_name}(self, cr, uid, ids, context=None):
+@api.multi
+def button_${1:function_name}(self):
 	${0:# TODO : Do something here}
 	return True
 
@@ -496,7 +502,7 @@ $0
 endsnippet 
 
 snippet raise "raise" b
-raise orm.except_orm(_(u'${1:Title}'), _(u'${2:Message}')${3: % (${4:param1, param2, })})$0
+raise orm.except_orm(_(u'${1:Title}'), _(u'${2:Message}'))$0
 endsnippet
 
 snippet strftime ""
@@ -514,7 +520,7 @@ endsnippet
 snippet returnview "return view from python function" b
 res = self.pool.get('ir.model.data').get_object_reference(cr, uid, '${1:module_name}', '${2:view_xml_id}')
 return {
-	'name': '${3:View Title}',
+	'name': u'${3:View Title}',
 	'view_type': '$4`!p snip.rv = complete(t[4], 'viewtypes')`',
 	'view_mode': 'form',
 	'view_id': [res and res[1] or False],
@@ -522,9 +528,31 @@ return {
 	'context': "{}",
 	'type': 'ir.actions.act_window',
 	'nodestroy': True,
-	'target': 'current',
 	'target': '$6`!p snip.rv = complete(t[6], 'viewtargets')`',
 	'res_id': ${7:variable_with_id or False},
 	}
 $0
 endsnippet
+
+snippet returnclose "return close client action" b
+return {'type': 'ir.actions.act_window_close'}$0
+endsnippet
+
+snippet returnurl "return url" b
+return {
+	'type': u'ir.actions.act_url',
+	'url': ${1:u'/your/url/here'},
+	'target': '$2`!p snip.rv = complete(t[6], 'viewtargets')`',
+}
+$0
+endsnippet
+
+snippet returnwarning "return warning" b
+return {
+	'warning': {
+		'title': _(u'${1:Some Title Here}'),
+		'message': _(u'${2:Some Warning message}')
+	}
+}$0
+endsnippet
+
