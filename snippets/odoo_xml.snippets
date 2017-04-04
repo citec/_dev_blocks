@@ -74,6 +74,17 @@ snippet foverride "Field override" b
 </field>
 endsnippet
 
+snippet subtype "Message subtype" b
+<record id="mt_${4:`!p snip.rv = points2underscores(t[1])`_`!p snip.rv = lower_underscore(t[2])`}" model="mail.message.subtype">
+	<field name="name">${2:Name here}</field>
+	<field name="description">${3:Description here}</field>
+	<field name="res_model">${1:model.with.points}</field>
+	<field name="default" eval="False"/>
+	<field name="hidden" eval="False"/>
+</record>
+$0
+endsnippet
+
 snippet xpath "XPath Element" b
 <xpath expr="${1://Some[@expression='here']}" position="$2`!p snip.rv = complete(t[2], 'positions')`">
 	${0:${VISUAL}}
@@ -193,7 +204,7 @@ snippet button "Button" b
 endsnippet
 
 snippet editable "editable"
-editable="$1`!p snip.rv = complete(t[1], 'editable')`" $0
+editable="$1`!p snip.rv = complete(t[1], 'editable')`"$0
 endsnippet
 
 snippet kv

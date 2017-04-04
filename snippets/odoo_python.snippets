@@ -15,6 +15,7 @@ def ffunction_field_type(type):
 		'many2one': "relation='model.with.points', ",
 		'float': "digits_compute=dp.get_precision('Account'),  # Remember to import dp",
 		'char': "size=64, ",
+		'selection': "selection=ARRAY_WITH_SELECTION_TUPLES, ",
 	}
 	return type in options and options[type] or ''
 
@@ -502,7 +503,7 @@ $0
 endsnippet 
 
 snippet raise "raise" b
-raise orm.except_orm(_(u'${1:Title}'), _(u'${2:Message}'))$0
+raise orm.except_orm(u'${1:Title}', u'${2:Message}')$0
 endsnippet
 
 snippet strftime ""
