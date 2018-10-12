@@ -320,7 +320,7 @@ snippet actionmulti "client_action_multi" b
 	<field name="condition">True</field>
 	<field name="code">
 		${3:if context.get('active_model') == '`!p snip.rv = underscores2points(t[1])`' and context.get('active_ids'):
-			self.send_pictures_to_web(cr, uid, context.get('active_ids', []), context)}
+			action = self.${4:python_function_name}(cr, uid, context.get('active_ids', []), context)}
 	</field>
 </record>
 
