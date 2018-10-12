@@ -23,6 +23,7 @@ def complete(t, opts):
 		'colors': ['todo', 'todo'],  # TODO
 		'fonts': ['todo', 'todo'],  # TODO
 		'editable': ['top', 'bottom'],
+		'cron_intervals': ['minutes', 'hours', 'work_days', 'days', 'weeks', 'months'],
 	}
 	if isinstance(opts, str) and opts in options:
 		opts = options[opts]
@@ -398,6 +399,22 @@ snippet bctrans
 	<field name="tracer">${5:$1}</field>
 	<field name="scenario_id" ref="scenario_inventory$6" />
 	<field name="sequence" eval="${7:10}" />
+</record>
+
+$0
+endsnippet
+
+snippet cron
+<record id="cron_${7:`!p snip.rv = points2underscores(t[2])`_`!p snip.rv = lower_underscore(t[3])`}" model="ir.cron">
+	<field name='name'>${1:Name of cron job}</field>
+	<field name='interval_number'>${6:1}</field>
+	<field name='interval_type'>$5`!p snip.rv = complete(t[5], 'cron_intervals')`</field>
+	<field name="numbercall">-1</field>
+	<field name="active">True</field>
+	<field name="doall" eval="False" />
+	<field name="model">${2:model.with.points}</field>
+	<field name="function">${3:function_name}</field>
+	<field name="args">(${4})</field>
 </record>
 
 $0
